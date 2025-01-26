@@ -1,5 +1,6 @@
 package com.message.messageapp.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,12 +36,14 @@ public class Channel {
     @JoinTable(name = "tc_channel_member",
             joinColumns = @JoinColumn(name = "channel_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @JsonManagedReference
     private List<User> members;
 
     @ManyToMany
     @JoinTable(name = "tc_channel_admin",
             joinColumns = @JoinColumn(name = "channel_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @JsonManagedReference
     private List<User> admins;
 
     @OneToMany(mappedBy = "channel")

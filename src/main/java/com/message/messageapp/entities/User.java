@@ -1,5 +1,6 @@
 package com.message.messageapp.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,11 +32,77 @@ public class User {
     private int isActive = 1;
 
     @ManyToMany(mappedBy = "members")
+    @JsonBackReference
     private List<Channel> memberChannels;
 
     @ManyToMany(mappedBy = "admins")
+    @JsonBackReference
     private List<Channel> adminChannels;
 
     @OneToMany(mappedBy = "sender")
     private List<Message> messages;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public int getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(int isActive) {
+        this.isActive = isActive;
+    }
+
+    public List<Channel> getMemberChannels() {
+        return memberChannels;
+    }
+
+    public void setMemberChannels(List<Channel> memberChannels) {
+        this.memberChannels = memberChannels;
+    }
+
+    public List<Channel> getAdminChannels() {
+        return adminChannels;
+    }
+
+    public void setAdminChannels(List<Channel> adminChannels) {
+        this.adminChannels = adminChannels;
+    }
+
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
+    }
 }
