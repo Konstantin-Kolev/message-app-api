@@ -2,16 +2,13 @@ package com.message.messageapp.entities;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "td_channels")
-@Getter()
-@Setter()
 @NoArgsConstructor()
 public class Channel {
 
@@ -23,7 +20,7 @@ public class Channel {
     private String name;
 
     @Column(name = "channel_type")
-    private String type;
+    private int type;
 
     @Column(name = "is_active")
     private int isActive = 1;
@@ -36,16 +33,80 @@ public class Channel {
     @JoinTable(name = "tc_channel_member",
             joinColumns = @JoinColumn(name = "channel_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    @JsonManagedReference
-    private List<User> members;
+    @JsonManagedReference("user-channel-member")
+    private List<User> members = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(name = "tc_channel_admin",
             joinColumns = @JoinColumn(name = "channel_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    @JsonManagedReference
-    private List<User> admins;
+    @JsonManagedReference("user-channel-admin")
+    private List<User> admins = new ArrayList<>();
 
     @OneToMany(mappedBy = "channel")
-    private List<Message> messages;
+    private List<Message> messages = new ArrayList<>();
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public int getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(int isActive) {
+        this.isActive = isActive;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    public List<User> getMembers() {
+        return members;
+    }
+
+    public void setMembers(List<User> members) {
+        this.members = members;
+    }
+
+    public List<User> getAdmins() {
+        return admins;
+    }
+
+    public void setAdmins(List<User> admins) {
+        this.admins = admins;
+    }
+
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
+    }
 }

@@ -1,18 +1,18 @@
 package com.message.messageapp.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "td_users")
-@Getter()
-@Setter()
-@NoArgsConstructor()
 public class User {
 
     @Id
@@ -32,15 +32,19 @@ public class User {
     private int isActive = 1;
 
     @ManyToMany(mappedBy = "members")
-    @JsonBackReference
-    private List<Channel> memberChannels;
+    @JsonBackReference("user-channel-member")
+//    @JsonIgnoreProperties("members")
+    private List<Channel> memberChannels = new ArrayList<>();
 
     @ManyToMany(mappedBy = "admins")
-    @JsonBackReference
-    private List<Channel> adminChannels;
+    @JsonBackReference("user-channel-admin")
+//    @JsonIgnoreProperties("admins")
+    private List<Channel> adminChannels = new ArrayList<>();
 
     @OneToMany(mappedBy = "sender")
     private List<Message> messages;
+
+    public User() {}
 
     public int getId() {
         return id;

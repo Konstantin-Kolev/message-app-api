@@ -1,5 +1,6 @@
 package com.message.messageapp.services;
 
+import com.message.messageapp.dto.UserCreateDto;
 import com.message.messageapp.entities.User;
 import com.message.messageapp.repositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -16,10 +17,14 @@ public class UserService {
     }
 
     public List<User> findAll() {
-        return this.userRepository.findByIsActive(1);
+        return this.userRepository.findAllActive();
     }
 
-    public User create(User user) {
+    public User create(UserCreateDto userInput) {
+        User user = new User();
+        user.setUsername(userInput.getUsername());
+        user.setPassword(userInput.getPassword());
+        user.setEmail(userInput.getEmail());
         return this.userRepository.save(user);
     }
 
