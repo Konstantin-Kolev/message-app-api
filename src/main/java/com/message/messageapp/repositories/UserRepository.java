@@ -7,10 +7,27 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
-    public User findByUsernameAndPassword(String username, String password);
+    User findByUsernameAndPassword(String username, String password);
 
     @Query("SELECT u FROM User u WHERE u.isActive = 1")
-    public List<User> findAllActive();
+    List<User> findAllActive();
 
-    public User findById(int id);
+    @Query("SELECT u FROM User u WHERE u.id = :id AND u.isActive = 1")
+    User findById(int id);
+
+    @Query("SELECT u FROM User u WHERE u.id NOT IN (SELECT m.id FROM Channel c JOIN c.members m WHERE c.id = :channelId) AND u.isActive = 1")
+    List<User> findUsersNotInChannel(int channelId);
+
+    @Query("SELECT u FROM User u WHERE u.id != :id AND u.isActive = 1")
+    List<User> findAllUsersExceptCurrent(int userId);
+
+    @Query("SELECT u FROM User u " +
+            "WHERE u.id IN (" +
+            "   SELECT m.id FROM Channel c " +
+            "   JOIN c.members m " +
+            "   WHERE c.type = 2 " +
+            "   AND c.id IN (SELECT c2.id FROM Channel c2 JOIN c2.members m2 WHERE m2.id = :userId) " +
+            "   AND m.id <> :userId" +
+            ")")
+    List<User> findFriendsByUserId(int userId);
 }

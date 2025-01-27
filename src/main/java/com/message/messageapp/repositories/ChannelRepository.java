@@ -8,5 +8,11 @@ import java.util.List;
 
 public interface ChannelRepository extends JpaRepository<Channel, Integer> {
     @Query("SELECT c FROM Channel c WHERE c.isActive = 1")
-    public List<Channel> findAllActive();
+    List<Channel> findAllActive();
+
+    @Query("SELECT c FROM Channel c WHERE c.id = :id AND c.isActive = 1")
+    Channel findById(int id);
+
+    @Query("SELECT c FROM Channel c JOIN c.members m WHERE m.id = :userId")
+    List<Channel> findChannelsByMemberId(int userId);
 }
