@@ -1,10 +1,8 @@
 package com.message.messageapp.controllers;
 
-import com.message.messageapp.dto.ChannelCreateRequest;
-import com.message.messageapp.entities.Channel;
+import com.message.messageapp.dto.ChannelCreateDto;
 import com.message.messageapp.http.AppResponse;
 import com.message.messageapp.services.ChannelService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/channels")
 public class ChannelController {
 
-    private ChannelService channelService;
+    private final ChannelService channelService;
 
     public ChannelController(ChannelService channelService) {
         this.channelService = channelService;
@@ -72,15 +70,15 @@ public class ChannelController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> createChannel(@RequestBody ChannelCreateRequest request) {
+    public ResponseEntity<?> createChannel(@RequestBody ChannelCreateDto createDto) {
 
-        if (request.getType() != 1 && request.getType() != 2) {
+        if (createDto.getType() != 1 && createDto.getType() != 2) {
             return AppResponse.error()
                     .withMessage("Invalid type of channel")
                     .build();
         }
 
-        var channel = this.channelService.createChannel(request);
+        var channel = this.channelService.createChannel(createDto);
         if (channel == null) {
             return AppResponse.error()
                     .withMessage("Owner doesn't exist")

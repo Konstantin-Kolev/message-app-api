@@ -1,6 +1,6 @@
 package com.message.messageapp.dto;
 
-public class ChannelCreateRequest {
+public class ChannelCreateDto {
 
     private String name;
     private int type;

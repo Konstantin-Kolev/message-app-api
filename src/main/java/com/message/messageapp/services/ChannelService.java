@@ -1,6 +1,6 @@
 package com.message.messageapp.services;
 
-import com.message.messageapp.dto.ChannelCreateRequest;
+import com.message.messageapp.dto.ChannelCreateDto;
 import com.message.messageapp.dto.UserOutputDto;
 import com.message.messageapp.entities.Channel;
 import com.message.messageapp.entities.User;
@@ -71,7 +71,7 @@ public class ChannelService {
         return result;
     }
 
-    public Channel createChannel(ChannelCreateRequest channelData) {
+    public Channel createChannel(ChannelCreateDto channelData) {
         User owner = this.userRepository.findById(channelData.getOwnerId());
 
         if (owner == null) {

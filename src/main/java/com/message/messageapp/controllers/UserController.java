@@ -48,7 +48,7 @@ public class UserController {
                 .build();
     }
 
-    @GetMapping("/{userId/friends}")
+    @GetMapping("/{userId}/friends")
     public ResponseEntity<?> getFriendsForUser(@PathVariable int userId) {
         var collection = this.userService.getFriendsForUser(userId);
 
