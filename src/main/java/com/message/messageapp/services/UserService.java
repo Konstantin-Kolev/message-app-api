@@ -1,5 +1,6 @@
 package com.message.messageapp.services;
 
+import com.message.messageapp.dto.DtoConverter;
 import com.message.messageapp.dto.UserCreateDto;
 import com.message.messageapp.dto.UserOutputDto;
 import com.message.messageapp.entities.User;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -24,44 +26,21 @@ public class UserService {
 
     public List<UserOutputDto> getUsersNotInChannel(int channelId) {
         var users =  this.userRepository.findUsersNotInChannel(channelId);
-        List<UserOutputDto> result = new ArrayList<>();
-        for (var user : users) {
-            UserOutputDto userOutputDto = new UserOutputDto();
-            userOutputDto.setId(user.getId());
-            userOutputDto.setUsername(user.getUsername());
-            userOutputDto.setEmail(user.getEmail());
-            result.add(userOutputDto);
-        }
 
-        return result;
+
+        return users.stream().map(DtoConverter::convertUserToOutputDto).collect(Collectors.toList());
     }
 
     public List<UserOutputDto> getAllUsersExceptCurrent(int userId) {
         var users = this.userRepository.findUsersNotInChannel(userId);
-        List<UserOutputDto> result = new ArrayList<>();
-        for (var user : users) {
-            UserOutputDto userOutputDto = new UserOutputDto();
-            userOutputDto.setId(user.getId());
-            userOutputDto.setUsername(user.getUsername());
-            userOutputDto.setEmail(user.getEmail());
-            result.add(userOutputDto);
-        }
 
-        return result;
+        return users.stream().map(DtoConverter::convertUserToOutputDto).collect(Collectors.toList());
     }
 
     public List<UserOutputDto> getFriendsForUser(int userId) {
         var users = this.userRepository.findFriendsByUserId(userId);
-        List<UserOutputDto> result = new ArrayList<>();
-        for (var user : users) {
-            UserOutputDto userOutputDto = new UserOutputDto();
-            userOutputDto.setId(user.getId());
-            userOutputDto.setUsername(user.getUsername());
-            userOutputDto.setEmail(user.getEmail());
-            result.add(userOutputDto);
-        }
 
-        return result;
+        return users.stream().map(DtoConverter::convertUserToOutputDto).collect(Collectors.toList());
     }
 
     public User create(UserCreateDto userInput) {
@@ -75,9 +54,6 @@ public class UserService {
     public boolean login(String email, String password) {
         var foundUser = this.userRepository.findByUsernameAndPassword(email, password);
 
-        if (foundUser != null) {
-            return true;
-        }
-        return false;
+        return foundUser != null;
     }
 }

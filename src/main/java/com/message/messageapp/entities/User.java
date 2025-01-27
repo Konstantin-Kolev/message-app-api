@@ -42,6 +42,7 @@ public class User {
     private List<Channel> adminChannels = new ArrayList<>();
 
     @OneToMany(mappedBy = "sender")
+    @JsonIgnore
     private List<Message> messages;
 
     public User() {}

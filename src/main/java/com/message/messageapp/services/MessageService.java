@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MessageService {
@@ -29,25 +30,17 @@ public class MessageService {
 
     public List<MessageOutputDto> getMessagesForChannel(int channelId) {
         var messages = this.messageRepository.findMessagesByChannelId(channelId);
-        List<MessageOutputDto> result = new ArrayList<>();
-        for (Message message : messages) {
-            result.add(DtoConverter.convertMessageToOutputDto(message));
-        }
 
-        return result;
+        return messages.stream().map(DtoConverter::convertMessageToOutputDto).collect(Collectors.toList());
     }
 
     public List<MessageOutputDto> getMessagesBetweenFriend(int userId, int friendId) {
         var messages = this.messageRepository.findMessagesBetweenFriends(userId, friendId);
-        List<MessageOutputDto> result = new ArrayList<>();
-        for (Message message : messages) {
-            result.add(DtoConverter.convertMessageToOutputDto(message));
-        }
 
-        return result;
+        return messages.stream().map(DtoConverter::convertMessageToOutputDto).collect(Collectors.toList());
     }
 
-    public Message createMessage(MessageCreateDto createDto) {
+    public Message createMessage(MessageCreateDto createDto) throws Exception {
         Channel channel = channelRepository.findById(createDto.getChannelId());
         User user = userRepository.findById(createDto.getSenderId());
 

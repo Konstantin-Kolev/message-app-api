@@ -1,6 +1,8 @@
 package com.message.messageapp.services;
 
 import com.message.messageapp.dto.ChannelCreateDto;
+import com.message.messageapp.dto.ChannelOutputDto;
+import com.message.messageapp.dto.DtoConverter;
 import com.message.messageapp.dto.UserOutputDto;
 import com.message.messageapp.entities.Channel;
 import com.message.messageapp.entities.User;
@@ -10,12 +12,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ChannelService {
 
-    private ChannelRepository channelRepository;
-    private UserRepository userRepository;
+    private final ChannelRepository channelRepository;
+    private final UserRepository userRepository;
 
     public ChannelService(ChannelRepository channelRepository, UserRepository userRepository) {
         this.channelRepository = channelRepository;
@@ -23,8 +26,9 @@ public class ChannelService {
     }
 
 
-    public List<Channel> getAllChannels() {
-        return this.channelRepository.findAllActive();
+    public List<ChannelOutputDto> getAllChannels() {
+        var channels = this.channelRepository.findAllActive();
+        return channels.stream().map(DtoConverter::convertChannelToOutputDto).collect(Collectors.toList());
     }
 
     public List<Channel> getChannelsByMember(int userId) {
@@ -38,17 +42,7 @@ public class ChannelService {
             return null;
         }
 
-        List<UserOutputDto> result = new ArrayList<>();
-
-        for (User member : channel.getMembers()) {
-            UserOutputDto outputDto =  new UserOutputDto();
-            outputDto.setId(member.getId());
-            outputDto.setUsername(member.getUsername());
-            outputDto.setEmail(member.getEmail());
-            result.add(outputDto);
-        }
-
-        return result;
+        return channel.getMembers().stream().map(DtoConverter::convertUserToOutputDto).collect(Collectors.toList());
     }
 
     public List<UserOutputDto> getChannelAdmins(int channelId) {
@@ -58,17 +52,7 @@ public class ChannelService {
             return null;
         }
 
-        List<UserOutputDto> result = new ArrayList<>();
-
-        for (User member : channel.getAdmins()) {
-            UserOutputDto outputDto =  new UserOutputDto();
-            outputDto.setId(member.getId());
-            outputDto.setUsername(member.getUsername());
-            outputDto.setEmail(member.getEmail());
-            result.add(outputDto);
-        }
-
-        return result;
+        return channel.getAdmins().stream().map(DtoConverter::convertUserToOutputDto).collect(Collectors.toList());
     }
 
     public Channel createChannel(ChannelCreateDto channelData) {

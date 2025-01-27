@@ -40,6 +40,7 @@ public class MessageController {
 
     @PostMapping()
     public ResponseEntity<?> createMessage(@RequestBody MessageCreateDto createDto) {
+        try {
         var result = messageService.createMessage(createDto);
 
         if (result == null) {
@@ -51,5 +52,10 @@ public class MessageController {
         return AppResponse.success()
                 .withData("Message created")
                 .build();
+        } catch (Exception e) {
+            return AppResponse.error()
+                    .withMessage(e.getMessage())
+                    .build();
+        }
     }
 }

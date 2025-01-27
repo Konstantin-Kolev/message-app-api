@@ -1,7 +1,10 @@
 package com.message.messageapp.dto;
 
+import com.message.messageapp.entities.Channel;
 import com.message.messageapp.entities.Message;
 import com.message.messageapp.entities.User;
+
+import java.util.stream.Collectors;
 
 public class DtoConverter {
 
@@ -23,5 +26,17 @@ public class DtoConverter {
         messageOutputDto.setTimestamp(message.getTimestamp());
 
         return messageOutputDto;
+    }
+
+    public static ChannelOutputDto convertChannelToOutputDto(Channel channel) {
+        ChannelOutputDto channelOutputDto = new ChannelOutputDto();
+        channelOutputDto.setId(channel.getId());
+        channelOutputDto.setName(channel.getName());
+        channelOutputDto.setType(channel.getType());
+        channelOutputDto.setOwner(DtoConverter.convertUserToOutputDto(channel.getOwner()));
+        channelOutputDto.setMembers(channel.getMembers().stream().map(DtoConverter::convertUserToOutputDto).collect(Collectors.toList()));
+        channelOutputDto.setAdmins(channel.getAdmins().stream().map(DtoConverter::convertUserToOutputDto).collect(Collectors.toList()));
+
+        return channelOutputDto;
     }
 }
