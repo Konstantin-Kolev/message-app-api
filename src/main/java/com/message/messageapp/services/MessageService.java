@@ -37,6 +37,16 @@ public class MessageService {
         return result;
     }
 
+    public List<MessageOutputDto> getMessagesBetweenFriend(int userId, int friendId) {
+        var messages = this.messageRepository.findMessagesBetweenFriends(userId, friendId);
+        List<MessageOutputDto> result = new ArrayList<>();
+        for (Message message : messages) {
+            result.add(DtoConverter.convertMessageToOutputDto(message));
+        }
+
+        return result;
+    }
+
     public Message createMessage(MessageCreateDto createDto) {
         Channel channel = channelRepository.findById(createDto.getChannelId());
         User user = userRepository.findById(createDto.getSenderId());

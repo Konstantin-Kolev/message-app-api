@@ -18,6 +18,26 @@ public class MessageController {
         this.messageService = messageService;
     }
 
+    @GetMapping("/fromChannel/{channelId}")
+    public ResponseEntity<?> getMessagesForChannel(@PathVariable int channelId) {
+        var collection = messageService.getMessagesForChannel(channelId);
+
+        return AppResponse.success()
+                .withMessage("Messages for channel")
+                .withData(collection)
+                .build();
+    }
+
+    @GetMapping("/{userId}/withFriend/{friendId}")
+    public ResponseEntity<?> getMessagesBetweenFriends(@PathVariable int userId, @PathVariable int friendId) {
+        var collection = this.messageService.getMessagesBetweenFriend(userId, friendId);
+
+        return AppResponse.success()
+                .withMessage("Messages between friends")
+                .withData(collection)
+                .build();
+    }
+
     @PostMapping()
     public ResponseEntity<?> createMessage(@RequestBody MessageCreateDto createDto) {
         var result = messageService.createMessage(createDto);
@@ -30,16 +50,6 @@ public class MessageController {
 
         return AppResponse.success()
                 .withData("Message created")
-                .build();
-    }
-
-    @GetMapping("/fromChannel/{channelId}")
-    public ResponseEntity<?> getMessagesForChannel(@PathVariable("channelId") int channelId) {
-        var collection = messageService.getMessagesForChannel(channelId);
-
-        return AppResponse.success()
-                .withMessage("Messages for channel")
-                .withData(collection)
                 .build();
     }
 }

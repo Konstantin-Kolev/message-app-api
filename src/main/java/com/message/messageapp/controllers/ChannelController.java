@@ -55,7 +55,7 @@ public class ChannelController {
 
     @GetMapping("/{channelId}/admins")
     public ResponseEntity<?> getAllAdmins(@PathVariable int channelId) {
-        var collection = this.channelService.getChannelMembers(channelId);
+        var collection = this.channelService.getChannelAdmins(channelId);
 
         if (collection == null) {
             return AppResponse.error()
