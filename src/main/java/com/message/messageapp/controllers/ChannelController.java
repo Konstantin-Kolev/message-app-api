@@ -80,7 +80,7 @@ public class ChannelController {
 
             return AppResponse.success()
                     .withMessage("Channel created")
-                    .withData(DtoConverter.convertChannelToOutputDto(channel))
+                    .withData(channel)
                     .build();
         } catch (Exception e) {
             return AppResponse.error()
@@ -99,7 +99,7 @@ public class ChannelController {
 
             return AppResponse.success()
                     .withMessage("Channel created")
-                    .withData(DtoConverter.convertChannelToOutputDto(channel))
+                    .withData(channel)
                     .build();
         } catch (Exception e) {
             return AppResponse.error()

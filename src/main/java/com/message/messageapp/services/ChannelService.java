@@ -31,8 +31,8 @@ public class ChannelService {
         return channels.stream().map(DtoConverter::convertChannelToOutputDto).collect(Collectors.toList());
     }
 
-    public List<Channel> getChannelsByMember(int userId) {
-        return this.channelRepository.findChannelsByMemberId(userId);
+    public List<ChannelOutputDto> getChannelsByMember(int userId) {
+        return this.channelRepository.findChannelsByMemberId(userId).stream().map(DtoConverter::convertChannelToOutputDto).collect(Collectors.toList());
     }
 
     public List<UserOutputDto> getChannelMembers(int channelId) throws Exception {
@@ -55,7 +55,7 @@ public class ChannelService {
         return channel.getAdmins().stream().map(DtoConverter::convertUserToOutputDto).collect(Collectors.toList());
     }
 
-    public Channel createChannel(ChannelCreateDto channelData) throws Exception {
+    public ChannelOutputDto createChannel(ChannelCreateDto channelData) throws Exception {
 
         if (channelData.getType() != 1 && channelData.getType() != 2) {
             throw new Exception("Invalid type of channel");
@@ -75,10 +75,10 @@ public class ChannelService {
         channel.getMembers().add(owner);
         channel.getAdmins().add(owner);
 
-        return this.channelRepository.save(channel);
+        return DtoConverter.convertChannelToOutputDto(this.channelRepository.save(channel));
     }
 
-    public Channel createFriendChannel(int userId, int friendId) throws Exception {
+    public ChannelOutputDto createFriendChannel(int userId, int friendId) throws Exception {
         User user = this.userRepository.findById(userId);
         User friend = this.userRepository.findById(friendId);
 
@@ -103,17 +103,17 @@ public class ChannelService {
         channel.getAdmins().add(user);
         channel.getAdmins().add(friend);
 
-        return this.channelRepository.save(channel);
+        return DtoConverter.convertChannelToOutputDto(this.channelRepository.save(channel));
     }
 
-    public Channel renameChannel(int channelId, String newName) throws Exception {
+    public ChannelOutputDto renameChannel(int channelId, String newName) throws Exception {
         Channel channel = this.channelRepository.findById(channelId);
         if (channel == null) {
             throw new Exception("Channel not found");
         }
 
         channel.setName(newName);
-        return this.channelRepository.save(channel);
+        return DtoConverter.convertChannelToOutputDto(this.channelRepository.save(channel));
     }
 
     public boolean deleteChannel(int channelId) throws Exception {
@@ -126,7 +126,7 @@ public class ChannelService {
         return true;
     }
 
-    public Channel addMember(int channelId, int userId) throws Exception {
+    public ChannelOutputDto addMember(int channelId, int userId) throws Exception {
         Channel channel = this.channelRepository.findById(channelId);
         User user = this.userRepository.findById(userId);
         if (channel == null) {
@@ -139,13 +139,13 @@ public class ChannelService {
 
         if (!channel.getMembers().contains(user)) {
             channel.getMembers().add(user);
-            return this.channelRepository.save(channel);
+            return DtoConverter.convertChannelToOutputDto(this.channelRepository.save(channel));
         }
 
         throw new Exception("User is already member of channel");
     }
 
-    public Channel removeMember(int channelId, int userId) throws Exception {
+    public ChannelOutputDto removeMember(int channelId, int userId) throws Exception {
         Channel channel = this.channelRepository.findById(channelId);
         User user = this.userRepository.findById(userId);
         if (channel == null) {
@@ -158,13 +158,13 @@ public class ChannelService {
 
         if (channel.getMembers().contains(user)) {
             channel.getMembers().remove(user);
-            return this.channelRepository.save(channel);
+            return DtoConverter.convertChannelToOutputDto(this.channelRepository.save(channel));
         }
 
         throw new Exception("User is not member of channel");
     }
 
-    public Channel addAdmin(int channelId, int userId) throws Exception {
+    public ChannelOutputDto addAdmin(int channelId, int userId) throws Exception {
         Channel channel = this.channelRepository.findById(channelId);
         User user = this.userRepository.findById(userId);
         if (channel == null) {
@@ -177,13 +177,13 @@ public class ChannelService {
 
         if (!channel.getAdmins().contains(user)) {
             channel.getAdmins().add(user);
-            return this.channelRepository.save(channel);
+            return DtoConverter.convertChannelToOutputDto(this.channelRepository.save(channel));
         }
 
         throw new Exception("User is already admin of channel");
     }
 
-    public Channel removeAdmin(int channelId, int userId) throws Exception {
+    public ChannelOutputDto removeAdmin(int channelId, int userId) throws Exception {
         Channel channel = this.channelRepository.findById(channelId);
         User user = this.userRepository.findById(userId);
         if (channel == null) {
@@ -196,7 +196,7 @@ public class ChannelService {
 
         if (channel.getAdmins().contains(user)) {
             channel.getAdmins().remove(user);
-            return this.channelRepository.save(channel);
+            return DtoConverter.convertChannelToOutputDto(this.channelRepository.save(channel));
         }
 
         throw new Exception("User is not admin of channel");
