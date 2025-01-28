@@ -1,6 +1,7 @@
 package com.message.messageapp.controllers;
 
 import com.message.messageapp.dto.ChannelCreateDto;
+import com.message.messageapp.dto.DtoConverter;
 import com.message.messageapp.http.AppResponse;
 import com.message.messageapp.services.ChannelService;
 import org.springframework.http.ResponseEntity;
@@ -79,7 +80,7 @@ public class ChannelController {
 
             return AppResponse.success()
                     .withMessage("Channel created")
-                    .withData(channel)
+                    .withData(DtoConverter.convertChannelToOutputDto(channel))
                     .build();
         } catch (Exception e) {
             return AppResponse.error()
@@ -98,7 +99,7 @@ public class ChannelController {
 
             return AppResponse.success()
                     .withMessage("Channel created")
-                    .withData(channel)
+                    .withData(DtoConverter.convertChannelToOutputDto(channel))
                     .build();
         } catch (Exception e) {
             return AppResponse.error()
