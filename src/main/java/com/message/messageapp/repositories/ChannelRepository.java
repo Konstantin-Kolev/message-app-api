@@ -15,4 +15,10 @@ public interface ChannelRepository extends JpaRepository<Channel, Integer> {
 
     @Query("SELECT c FROM Channel c JOIN c.members m WHERE m.id = :userId")
     List<Channel> findChannelsByMemberId(int userId);
+
+    @Query("SELECT COUNT(c) > 0 " +
+            "FROM Channel c " +
+            "WHERE c.type = 2 " +
+            "AND (c.name = CONCAT(:username1, '|', :username2) OR c.name = CONCAT(:username2, '|', :username1))")
+    boolean friendChannelExists(String username1, String username2);
 }

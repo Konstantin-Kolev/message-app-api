@@ -90,6 +90,10 @@ public class ChannelService {
             throw new Exception("Friend doesn't exist in records");
         }
 
+        if (this.channelRepository.friendChannelExists(user.getUsername(), friend.getUsername())) {
+            throw new Exception("Friend chat already exists");
+        }
+
         Channel channel = new Channel();
         channel.setName(user.getUsername()+"|"+friend.getUsername());
         channel.setType(2);
