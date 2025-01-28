@@ -1,5 +1,6 @@
 package com.message.messageapp.controllers;
 
+import com.message.messageapp.dto.DtoConverter;
 import com.message.messageapp.dto.UserCreateDto;
 import com.message.messageapp.dto.UserOutputDto;
 import com.message.messageapp.http.AppResponse;
@@ -60,15 +61,18 @@ public class UserController {
 
     @PostMapping()
     public ResponseEntity<?> createUser(@RequestBody UserCreateDto userInput) {
-        var response = this.userService.create(userInput);
-        UserOutputDto outputDto = new UserOutputDto();
-        outputDto.setId(response.getId());
-        outputDto.setUsername(response.getUsername());
-        outputDto.setEmail(response.getEmail());
+        try {
+            var response = this.userService.create(userInput);
+            UserOutputDto outputDto = DtoConverter.convertUserToOutputDto(response);
 
-        return AppResponse.success()
-                .withMessage("New user created")
-                .withData(outputDto)
-                .build();
+            return AppResponse.success()
+                    .withMessage("New user created")
+                    .withData(outputDto)
+                    .build();
+        } catch (Exception e) {
+            return AppResponse.error()
+                    .withMessage(e.getMessage())
+                    .build();
+        }
     }
 }

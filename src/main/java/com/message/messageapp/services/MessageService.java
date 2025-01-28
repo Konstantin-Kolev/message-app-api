@@ -44,8 +44,17 @@ public class MessageService {
         Channel channel = channelRepository.findById(createDto.getChannelId());
         User user = userRepository.findById(createDto.getSenderId());
 
-        if (channel == null || user == null) {
-            return null;
+        if (channel == null) {
+            throw new Exception("Channel not found");
+        }
+
+        if (user == null) {
+            throw new Exception("User not found");
+        }
+
+
+        if (!channel.getMembers().contains(user)) {
+            throw new Exception("User is not a member of the chanel");
         }
 
         Message message = new Message();

@@ -39,149 +39,144 @@ public class ChannelController {
 
     @GetMapping("/{channelId}/members")
     public ResponseEntity<?> getAllMembers(@PathVariable int channelId) {
-        var collection = this.channelService.getChannelMembers(channelId);
+        try {
+            var collection = this.channelService.getChannelMembers(channelId);
 
-        if (collection == null) {
+            return AppResponse.success()
+                    .withMessage("Channel members")
+                    .withData(collection)
+                    .build();
+        } catch (Exception e) {
             return AppResponse.error()
-                    .withMessage("Channel " + channelId + " doesn't exist")
+                    .withMessage(e.getMessage())
                     .build();
         }
-
-        return AppResponse.success()
-                .withMessage("Channel members")
-                .withData(collection)
-                .build();
     }
 
     @GetMapping("/{channelId}/admins")
     public ResponseEntity<?> getAllAdmins(@PathVariable int channelId) {
-        var collection = this.channelService.getChannelAdmins(channelId);
+        try {
+            var collection = this.channelService.getChannelAdmins(channelId);
 
-        if (collection == null) {
+            return AppResponse.success()
+                    .withMessage("Channel admins")
+                    .withData(collection)
+                    .build();
+        } catch (Exception e) {
             return AppResponse.error()
-                    .withMessage("Channel " + channelId + " doesn't exist")
+                    .withMessage(e.getMessage())
                     .build();
         }
-
-        return AppResponse.success()
-                .withMessage("Channel admins")
-                .withData(collection)
-                .build();
     }
 
     @PostMapping()
     public ResponseEntity<?> createChannel(@RequestBody ChannelCreateDto createDto) {
+        try {
+            var channel = this.channelService.createChannel(createDto);
 
-        if (createDto.getType() != 1 && createDto.getType() != 2) {
+            return AppResponse.success()
+                    .withMessage("Channel created")
+                    .withData(channel)
+                    .build();
+        } catch (Exception e) {
             return AppResponse.error()
-                    .withMessage("Invalid type of channel")
+                    .withMessage(e.getMessage())
                     .build();
         }
-
-        var channel = this.channelService.createChannel(createDto);
-        if (channel == null) {
-            return AppResponse.error()
-                    .withMessage("Owner doesn't exist")
-                    .build();
-        }
-
-        return AppResponse.success()
-                .withMessage("Channel created")
-                .withData(channel)
-                .build();
     }
 
     @PostMapping("/rename/{channelId}")
     public ResponseEntity<?> renameChannel(@PathVariable int channelId, @RequestParam String newName) {
-        var channel = this.channelService.renameChannel(channelId, newName);
-        if (channel == null) {
+        try {
+            var channel = this.channelService.renameChannel(channelId, newName);
+
+            return AppResponse.success()
+                    .withMessage("Channel renamed")
+                    .withData(channel)
+                    .build();
+        } catch (Exception e) {
             return AppResponse.error()
-                    .withMessage("Channel " + channelId + " doesn't exist")
+                    .withMessage(e.getMessage())
                     .build();
         }
-
-        return AppResponse.success()
-                .withMessage("Channel renamed")
-                .withData(channel)
-                .build();
     }
 
     @DeleteMapping("/{channelId}")
     public ResponseEntity<?> deleteChannel(@PathVariable int channelId) {
-        var result = this.channelService.deleteChannel(channelId);
-        if (result) {
+        try {
+            var result = this.channelService.deleteChannel(channelId);
+
+            return AppResponse.success()
+                    .withMessage("Channel deleted")
+                    .build();
+        } catch (Exception e) {
             return AppResponse.error()
-                    .withMessage("Channel " + channelId + " doesn't exist")
+                    .withMessage(e.getMessage())
                     .build();
         }
-
-        return AppResponse.success()
-                .withMessage("Channel deleted")
-                .build();
     }
 
     @PostMapping("/{channelId}/addMember/{userId}")
     public ResponseEntity<?> addMember(@PathVariable int channelId, @PathVariable int userId) {
-        var channel = this.channelService.addMember(channelId, userId);
+        try {
+            var channel = this.channelService.addMember(channelId, userId);
 
-        if (channel == null) {
+            return AppResponse.success()
+                    .withMessage("Member added to channel")
+                    .withData(channel)
+                    .build();
+        } catch (Exception e) {
             return AppResponse.error()
-                    .withMessage("Channel or User doesn't exist")
+                    .withMessage(e.getMessage())
                     .build();
         }
-
-        return AppResponse.success()
-                .withMessage("Member added to channel")
-                .withData(channel)
-                .build();
     }
 
     @PostMapping("/{channelId}/removeMember/{userId}")
     public ResponseEntity<?> removeMember(@PathVariable int channelId, @PathVariable int userId) {
-        var channel = this.channelService.removeMember(channelId, userId);
-        if (channel == null) {
+        try {
+            var channel = this.channelService.removeMember(channelId, userId);
+
+            return AppResponse.success()
+                    .withMessage("Member removed to channel")
+                    .withData(channel)
+                    .build();
+        } catch (Exception e) {
             return AppResponse.error()
-                    .withMessage("Channel or User doesn't exist")
+                    .withMessage(e.getMessage())
                     .build();
         }
-
-        return AppResponse.success()
-                .withMessage("Member removed to channel")
-                .withData(channel)
-                .build();
     }
 
     @PostMapping("/{channelId}/addAdmin/{userId}")
     public ResponseEntity<?> addAdmin(@PathVariable int channelId, @PathVariable int userId) {
-        var channel = this.channelService.addAdmin(channelId, userId);
-        if (channel == null) {
+        try {
+            var channel = this.channelService.addAdmin(channelId, userId);
+
+            return AppResponse.success()
+                    .withMessage("Admin added to channel")
+                    .withData(channel)
+                    .build();
+        } catch (Exception e) {
             return AppResponse.error()
-                    .withMessage("Channel or User doesn't exist")
+                    .withMessage(e.getMessage())
                     .build();
         }
-
-        return AppResponse.success()
-                .withMessage("Admin added to channel")
-                .withData(channel)
-                .build();
-
-
     }
 
     @PostMapping("/{channelId}/removeAdmin/{userId}")
     public ResponseEntity<?> removeAdmin(@PathVariable int channelId, @PathVariable int userId) {
-        var channel = this.channelService.removeAdmin(channelId, userId);
-        if (channel == null) {
+        try {
+            var channel = this.channelService.removeAdmin(channelId, userId);
+
+            return AppResponse.success()
+                    .withMessage("Admin removed to channel")
+                    .withData(channel)
+                    .build();
+        } catch (Exception e) {
             return AppResponse.error()
-                    .withMessage("Channel or User doesn't exist")
+                    .withMessage(e.getMessage())
                     .build();
         }
-
-        return AppResponse.success()
-                .withMessage("Admin removed to channel")
-                .withData(channel)
-                .build();
-
-
     }
 }

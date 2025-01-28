@@ -6,6 +6,7 @@ import com.message.messageapp.dto.DtoConverter;
 import com.message.messageapp.dto.UserOutputDto;
 import com.message.messageapp.entities.Channel;
 import com.message.messageapp.entities.User;
+import com.message.messageapp.http.AppResponse;
 import com.message.messageapp.repositories.ChannelRepository;
 import com.message.messageapp.repositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -25,41 +26,45 @@ public class ChannelService {
         this.userRepository = userRepository;
     }
 
-
     public List<ChannelOutputDto> getAllChannels() {
         var channels = this.channelRepository.findAllActive();
         return channels.stream().map(DtoConverter::convertChannelToOutputDto).collect(Collectors.toList());
     }
 
     public List<Channel> getChannelsByMember(int userId) {
-    return this.channelRepository.findChannelsByMemberId(userId);
+        return this.channelRepository.findChannelsByMemberId(userId);
     }
 
-    public List<UserOutputDto> getChannelMembers(int channelId) {
+    public List<UserOutputDto> getChannelMembers(int channelId) throws Exception {
         Channel channel = this.channelRepository.findById(channelId);
 
         if (channel == null) {
-            return null;
+            throw new Exception("Channel not found");
         }
 
         return channel.getMembers().stream().map(DtoConverter::convertUserToOutputDto).collect(Collectors.toList());
     }
 
-    public List<UserOutputDto> getChannelAdmins(int channelId) {
+    public List<UserOutputDto> getChannelAdmins(int channelId) throws Exception {
         Channel channel = this.channelRepository.findById(channelId);
 
         if (channel == null) {
-            return null;
+            throw new Exception("Channel not found");
         }
 
         return channel.getAdmins().stream().map(DtoConverter::convertUserToOutputDto).collect(Collectors.toList());
     }
 
-    public Channel createChannel(ChannelCreateDto channelData) {
+    public Channel createChannel(ChannelCreateDto channelData) throws Exception {
+
+        if (channelData.getType() != 1 && channelData.getType() != 2) {
+            throw new Exception("Invalid type of channel");
+        }
+
         User owner = this.userRepository.findById(channelData.getOwnerId());
 
         if (owner == null) {
-            return null;
+            throw new Exception("Owner doesn't exist in records");
         }
 
         Channel channel = new Channel();
@@ -73,83 +78,99 @@ public class ChannelService {
         return this.channelRepository.save(channel);
     }
 
-    public Channel renameChannel(int channelId, String newName) {
+    public Channel renameChannel(int channelId, String newName) throws Exception {
         Channel channel = this.channelRepository.findById(channelId);
         if (channel == null) {
-            return null;
+            throw new Exception("Channel not found");
         }
 
         channel.setName(newName);
         return this.channelRepository.save(channel);
     }
 
-    public boolean deleteChannel(int channelId) {
+    public boolean deleteChannel(int channelId) throws Exception {
         Channel channel = this.channelRepository.findById(channelId);
         if (channel == null) {
-            return false;
+            throw new Exception("Channel not found");
         }
         channel.setIsActive(0);
         this.channelRepository.save(channel);
         return true;
     }
 
-    public Channel addMember(int channelId, int userId) {
+    public Channel addMember(int channelId, int userId) throws Exception {
         Channel channel = this.channelRepository.findById(channelId);
         User user = this.userRepository.findById(userId);
-        if (channel == null || user == null) {
-            return null;
+        if (channel == null) {
+            throw new Exception("Channel not found");
         }
 
-        if(!channel.getMembers().contains(user)) {
+        if (user == null) {
+            throw new Exception("User not found");
+        }
+
+        if (!channel.getMembers().contains(user)) {
             channel.getMembers().add(user);
             return this.channelRepository.save(channel);
         }
 
-        return channel;
+        throw new Exception("User is already member of channel");
     }
 
-    public Channel removeMember(int channelId, int userId) {
+    public Channel removeMember(int channelId, int userId) throws Exception {
         Channel channel = this.channelRepository.findById(channelId);
         User user = this.userRepository.findById(userId);
-        if (channel == null || user == null) {
-            return null;
+        if (channel == null) {
+            throw new Exception("Channel not found");
         }
 
-        if(channel.getMembers().contains(user)) {
+        if (user == null) {
+            throw new Exception("User not found");
+        }
+
+        if (channel.getMembers().contains(user)) {
             channel.getMembers().remove(user);
             return this.channelRepository.save(channel);
         }
 
-        return channel;
+        throw new Exception("User is not member of channel");
     }
 
-    public Channel addAdmin(int channelId, int userId) {
+    public Channel addAdmin(int channelId, int userId) throws Exception {
         Channel channel = this.channelRepository.findById(channelId);
         User user = this.userRepository.findById(userId);
-        if (channel == null || user == null) {
-            return null;
+        if (channel == null) {
+            throw new Exception("Channel not found");
         }
 
-        if(!channel.getAdmins().contains(user)) {
+        if (user == null) {
+            throw new Exception("User not found");
+        }
+
+        if (!channel.getAdmins().contains(user)) {
             channel.getAdmins().add(user);
             return this.channelRepository.save(channel);
         }
 
-        return channel;
+        throw new Exception("User is already admin of channel");
     }
 
-    public Channel removeAdmin(int channelId, int userId) {
+    public Channel removeAdmin(int channelId, int userId) throws Exception {
         Channel channel = this.channelRepository.findById(channelId);
         User user = this.userRepository.findById(userId);
-        if (channel == null || user == null) {
-            return null;
+        if (channel == null) {
+            throw new Exception("Channel not found");
         }
 
-        if(channel.getAdmins().contains(user)) {
+        if (user == null) {
+            throw new Exception("User not found");
+        }
+
+        if (channel.getAdmins().contains(user)) {
             channel.getAdmins().remove(user);
             return this.channelRepository.save(channel);
         }
 
-        return channel;
+        throw new Exception("User is not admin of channel");
     }
 }

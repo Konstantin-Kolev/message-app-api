@@ -27,12 +27,11 @@ public class UserService {
     public List<UserOutputDto> getUsersNotInChannel(int channelId) {
         var users =  this.userRepository.findUsersNotInChannel(channelId);
 
-
         return users.stream().map(DtoConverter::convertUserToOutputDto).collect(Collectors.toList());
     }
 
     public List<UserOutputDto> getAllUsersExceptCurrent(int userId) {
-        var users = this.userRepository.findUsersNotInChannel(userId);
+        var users = this.userRepository.findAllUsersExceptCurrent(userId);
 
         return users.stream().map(DtoConverter::convertUserToOutputDto).collect(Collectors.toList());
     }
@@ -43,7 +42,19 @@ public class UserService {
         return users.stream().map(DtoConverter::convertUserToOutputDto).collect(Collectors.toList());
     }
 
-    public User create(UserCreateDto userInput) {
+    public User create(UserCreateDto userInput) throws Exception {
+        User usernameCheck = this.userRepository.findByUsername(userInput.getUsername());
+        User emailCheck = this.userRepository.findByEmail(userInput.getEmail());
+
+        if (usernameCheck != null) {
+            throw new Exception("Username is taken");
+        }
+
+        if (emailCheck != null) {
+            throw new Exception("Email is taken");
+        }
+
+
         User user = new User();
         user.setUsername(userInput.getUsername());
         user.setPassword(userInput.getPassword());

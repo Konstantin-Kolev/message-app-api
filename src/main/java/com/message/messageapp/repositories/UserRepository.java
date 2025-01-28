@@ -30,4 +30,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
             "   AND m.id <> :userId" +
             ")")
     List<User> findFriendsByUserId(int userId);
+
+    @Query("SELECT u FROM User u WHERE u.username = :username AND u.isActive = 1")
+    User findByUsername(String username);
+
+    @Query("SELECT u FROM User u WHERE u.email = :email AND u.isActive = 1")
+    User findByEmail(String email);
 }
