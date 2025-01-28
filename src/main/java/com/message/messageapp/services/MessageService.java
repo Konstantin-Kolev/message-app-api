@@ -52,7 +52,6 @@ public class MessageService {
             throw new Exception("User not found");
         }
 
-
         if (!channel.getMembers().contains(user)) {
             throw new Exception("User is not a member of the chanel");
         }

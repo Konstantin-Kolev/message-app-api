@@ -7,7 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
-    User findByUsernameAndPassword(String username, String password);
+    @Query("SELECT u FROM User u WHERE u.email = :email AND u.password = :password AND u.isActive = 1")
+    User findByEmailAndPassword(String email, String password);
 
     @Query("SELECT u FROM User u WHERE u.isActive = 1")
     List<User> findAllActive();

@@ -5,9 +5,12 @@ import com.message.messageapp.dto.UserCreateDto;
 import com.message.messageapp.dto.UserOutputDto;
 import com.message.messageapp.http.AppResponse;
 import com.message.messageapp.services.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @Controller
 @RequestMapping("/users")
@@ -74,5 +77,22 @@ public class UserController {
                     .withMessage(e.getMessage())
                     .build();
         }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUser(@RequestBody Map<String, String> loginInput) {
+        String email = loginInput.get("email");
+        String password = loginInput.get("password");
+
+        if (this.userService.login(email, password)) {
+            return AppResponse.success()
+                    .withMessage("Login successful")
+                    .build();
+        }
+
+        return AppResponse.error()
+                .withCode(HttpStatus.UNAUTHORIZED)
+                .withMessage("Login failed")
+                .build();
     }
 }

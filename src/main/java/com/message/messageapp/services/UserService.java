@@ -63,7 +63,7 @@ public class UserService {
     }
 
     public boolean login(String email, String password) {
-        var foundUser = this.userRepository.findByUsernameAndPassword(email, password);
+        var foundUser = this.userRepository.findByEmailAndPassword(email, password);
 
         return foundUser != null;
     }
