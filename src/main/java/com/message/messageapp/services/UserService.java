@@ -7,7 +7,6 @@ import com.message.messageapp.entities.User;
 import com.message.messageapp.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,9 +61,13 @@ public class UserService {
         return this.userRepository.save(user);
     }
 
-    public boolean login(String email, String password) {
+    public UserOutputDto login(String email, String password) throws Exception {
         var foundUser = this.userRepository.findByEmailAndPassword(email, password);
 
-        return foundUser != null;
+        if (foundUser == null) {
+            throw new Exception("Login failed");
+        }
+
+        return DtoConverter.convertUserToOutputDto(foundUser);
     }
 }

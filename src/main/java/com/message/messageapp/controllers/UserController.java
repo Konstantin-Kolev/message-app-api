@@ -84,15 +84,18 @@ public class UserController {
         String email = loginInput.get("email");
         String password = loginInput.get("password");
 
-        if (this.userService.login(email, password)) {
+        try {
+            UserOutputDto loggedUser = this.userService.login(email, password);
             return AppResponse.success()
                     .withMessage("Login successful")
+                    .withData(loggedUser)
+                    .build();
+
+        } catch (Exception e) {
+            return AppResponse.error()
+                    .withCode(HttpStatus.UNAUTHORIZED)
+                    .withMessage(e.getMessage())
                     .build();
         }
-
-        return AppResponse.error()
-                .withCode(HttpStatus.UNAUTHORIZED)
-                .withMessage("Login failed")
-                .build();
     }
 }
