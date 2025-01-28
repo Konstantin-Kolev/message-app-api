@@ -7,6 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+import java.util.Objects;
+
 @Controller
 @RequestMapping("/channels")
 public class ChannelController {
@@ -73,6 +76,25 @@ public class ChannelController {
     public ResponseEntity<?> createChannel(@RequestBody ChannelCreateDto createDto) {
         try {
             var channel = this.channelService.createChannel(createDto);
+
+            return AppResponse.success()
+                    .withMessage("Channel created")
+                    .withData(channel)
+                    .build();
+        } catch (Exception e) {
+            return AppResponse.error()
+                    .withMessage(e.getMessage())
+                    .build();
+        }
+    }
+
+    @PostMapping("/friend")
+    public ResponseEntity<?> createFriendChannel(@RequestBody Map<String, Object> input) {
+        int userId = (int) input.get("userId");
+        int friendId = (int) input.get("friendId");
+
+        try {
+            var channel = this.channelService.createFriendChannel(userId, friendId);
 
             return AppResponse.success()
                     .withMessage("Channel created")

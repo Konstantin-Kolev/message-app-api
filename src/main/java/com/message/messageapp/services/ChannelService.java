@@ -78,6 +78,30 @@ public class ChannelService {
         return this.channelRepository.save(channel);
     }
 
+    public Channel createFriendChannel(int userId, int friendId) throws Exception {
+        User user = this.userRepository.findById(userId);
+        User friend = this.userRepository.findById(friendId);
+
+        if (user == null) {
+            throw new Exception("User not found");
+        }
+
+        if (friend == null) {
+            throw new Exception("Friend doesn't exist in records");
+        }
+
+        Channel channel = new Channel();
+        channel.setName(user.getUsername()+"|"+friend.getUsername());
+        channel.setType(2);
+        channel.setOwner(user);
+        channel.getMembers().add(user);
+        channel.getMembers().add(friend);
+        channel.getAdmins().add(user);
+        channel.getAdmins().add(friend);
+
+        return this.channelRepository.save(channel);
+    }
+
     public Channel renameChannel(int channelId, String newName) throws Exception {
         Channel channel = this.channelRepository.findById(channelId);
         if (channel == null) {
