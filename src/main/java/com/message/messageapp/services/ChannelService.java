@@ -112,6 +112,10 @@ public class ChannelService {
             throw new Exception("Channel not found");
         }
 
+        if (channel.getType() == 2) {
+            throw new Exception("Cannot rename friend channels");
+        }
+
         channel.setName(newName);
         return DtoConverter.convertChannelToOutputDto(this.channelRepository.save(channel));
     }
