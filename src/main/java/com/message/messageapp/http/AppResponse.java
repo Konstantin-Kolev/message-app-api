@@ -4,7 +4,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class AppResponse {
@@ -42,16 +41,9 @@ public class AppResponse {
         return this;
     }
 
-    public AppResponse withDataAsArray(Object data) {
-
-        ArrayList<Object> list = new ArrayList<>();
-        list.add(data);
-        return this.withData(list);
-    }
-
     public ResponseEntity<Object> build() {
 
         int code = (int) response.get("code");
-        return new ResponseEntity<Object>(response, HttpStatusCode.valueOf(code));
+        return new ResponseEntity<>(response, HttpStatusCode.valueOf(code));
     }
 }

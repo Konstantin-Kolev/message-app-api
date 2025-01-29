@@ -6,12 +6,10 @@ import com.message.messageapp.dto.DtoConverter;
 import com.message.messageapp.dto.UserOutputDto;
 import com.message.messageapp.entities.Channel;
 import com.message.messageapp.entities.User;
-import com.message.messageapp.http.AppResponse;
 import com.message.messageapp.repositories.ChannelRepository;
 import com.message.messageapp.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -120,14 +118,13 @@ public class ChannelService {
         return DtoConverter.convertChannelToOutputDto(this.channelRepository.save(channel));
     }
 
-    public boolean deleteChannel(int channelId) throws Exception {
+    public void deleteChannel(int channelId) throws Exception {
         Channel channel = this.channelRepository.findById(channelId);
         if (channel == null) {
             throw new Exception("Channel not found");
         }
         channel.setIsActive(0);
         this.channelRepository.save(channel);
-        return true;
     }
 
     public ChannelOutputDto addMember(int channelId, int userId) throws Exception {

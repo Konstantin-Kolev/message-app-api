@@ -1,7 +1,6 @@
 package com.message.messageapp.controllers;
 
 import com.message.messageapp.dto.ChannelCreateDto;
-import com.message.messageapp.dto.DtoConverter;
 import com.message.messageapp.http.AppResponse;
 import com.message.messageapp.services.ChannelService;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.Objects;
 
 @Controller
 @RequestMapping("/channels")
@@ -127,7 +125,7 @@ public class ChannelController {
     @DeleteMapping("/{channelId}")
     public ResponseEntity<?> deleteChannel(@PathVariable int channelId) {
         try {
-            var result = this.channelService.deleteChannel(channelId);
+            this.channelService.deleteChannel(channelId);
 
             return AppResponse.success()
                     .withMessage("Channel deleted")

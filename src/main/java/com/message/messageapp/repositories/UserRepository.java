@@ -19,7 +19,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("SELECT u FROM User u WHERE u.id NOT IN (SELECT m.id FROM Channel c JOIN c.members m WHERE c.id = :channelId) AND u.isActive = 1")
     List<User> findUsersNotInChannel(int channelId);
 
-    @Query("SELECT u FROM User u WHERE u.id != :id AND u.isActive = 1")
+    @Query("SELECT u FROM User u WHERE u.id != :userId AND u.isActive = 1")
     List<User> findAllUsersExceptCurrent(int userId);
 
     @Query("SELECT u FROM User u " +

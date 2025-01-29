@@ -1,7 +1,6 @@
 package com.message.messageapp.controllers;
 
 import com.message.messageapp.dto.MessageCreateDto;
-import com.message.messageapp.entities.Message;
 import com.message.messageapp.http.AppResponse;
 import com.message.messageapp.services.MessageService;
 import org.springframework.http.ResponseEntity;
